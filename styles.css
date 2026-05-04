@@ -324,6 +324,37 @@ img { max-width: 100%; display: block; }
   background: var(--black);
 }
 
+/* Hero background image */
+.hero-bg-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.hero-bg-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  opacity: 0.35;
+  filter: grayscale(30%);
+}
+
+.hero-bg-image::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, var(--black) 0%, transparent 40%),
+              linear-gradient(to top, var(--black) 0%, transparent 30%);
+}
+
 .hero-bg-text {
   position: absolute;
   top: -2%;
@@ -588,32 +619,22 @@ img { max-width: 100%; display: block; }
 
 .about-image-block {
   position: relative;
+  overflow: hidden;
 }
 
-.about-image-placeholder {
+.about-photo {
   width: 100%;
   aspect-ratio: 3/4;
-  background: var(--dark-gray);
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(20%);
+  transition: filter 0.5s var(--ease), transform 0.5s var(--ease);
   border: 1px solid var(--border-gray);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
 }
 
-.about-image-placeholder span {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--text-gray);
-}
-
-.about-image-placeholder p {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  color: var(--border-gray);
-  letter-spacing: 0.1em;
+.about-image-block:hover .about-photo {
+  filter: grayscale(0%);
+  transform: scale(1.02);
 }
 
 .about-bio {
@@ -767,6 +788,48 @@ img { max-width: 100%; display: block; }
 }
 
 /* ============================================
+   GALLERY
+   ============================================ */
+.gallery {
+  background: var(--black);
+  padding: 2px 0;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.gallery-item {
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  position: relative;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: grayscale(40%);
+  transition: filter 0.6s var(--ease), transform 0.6s var(--ease);
+}
+
+.gallery-item:hover img {
+  filter: grayscale(0%);
+  transform: scale(1.05);
+}
+
+.gallery-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.4) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ============================================
    RESULTS / TESTIMONIALS
    ============================================ */
 .results {
@@ -824,18 +887,18 @@ img { max-width: 100%; display: block; }
   min-width: 220px;
 }
 
-.author-image-placeholder {
+.author-image {
   width: 56px;
   height: 56px;
-  background: var(--accent);
-  color: var(--black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
+  object-fit: cover;
+  object-position: top center;
   flex-shrink: 0;
+  filter: grayscale(30%);
+  transition: filter 0.3s var(--ease);
+}
+
+.testimonial:hover .author-image {
+  filter: grayscale(0%);
 }
 
 .author-info {
@@ -1176,6 +1239,11 @@ a.contact-value:hover {
     padding: 0 32px 60px;
   }
 
+  .hero-bg-image {
+    width: 60%;
+    opacity: 0.8;
+  }
+
   .hero-cta {
     right: 32px;
     bottom: 60px;
@@ -1191,8 +1259,9 @@ a.contact-value:hover {
     gap: 48px;
   }
 
-  .about-image-placeholder {
+  .about-photo {
     aspect-ratio: 16/9;
+    object-position: top center;
   }
 
   .services-grid {
@@ -1217,6 +1286,10 @@ a.contact-value:hover {
 
   .cert-grid {
     grid-template-columns: 1fr;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .footer-top {
@@ -1252,8 +1325,20 @@ a.contact-value:hover {
 
   /* Hero */
   .hero {
-    padding: 0 20px 100px;
+    padding: 0 20px 40px;
     min-height: 100svh;
+    justify-content: flex-end;
+  }
+
+  .hero-bg-image {
+    width: 100%;
+    height: 50%;
+    top: 0;
+    right: 0;
+  }
+
+  .hero-bg-image img {
+    opacity: 0.2;
   }
 
   .hero-bg-text span {
@@ -1264,16 +1349,22 @@ a.contact-value:hover {
     font-size: clamp(2.2rem, 8vw, 3.5rem);
   }
 
+  .hero-sub {
+    font-size: 0.8rem;
+    max-width: 100%;
+  }
+
   .hero-cta {
     position: relative;
     bottom: auto;
     right: auto;
-    margin-top: 40px;
+    margin-top: 32px;
   }
 
   .cta-button {
     width: 100%;
     justify-content: space-between;
+    padding: 18px 24px;
   }
 
   .hero-scroll {
@@ -1286,7 +1377,12 @@ a.contact-value:hover {
   .results,
   .cta-section,
   .contact {
-    padding: 80px 0;
+    padding: 64px 0;
+  }
+
+  .section-header {
+    margin-bottom: 32px;
+    padding-bottom: 16px;
   }
 
   .about-title,
@@ -1297,30 +1393,145 @@ a.contact-value:hover {
     font-size: clamp(1.8rem, 6vw, 2.5rem);
   }
 
+  /* About mobile */
+  .about-grid {
+    gap: 32px;
+  }
+
+  .about-title {
+    margin-bottom: 24px;
+  }
+
+  .about-photo {
+    aspect-ratio: 4/3;
+  }
+
+  .about-lead {
+    font-size: 1rem;
+  }
+
+  .about-bio p {
+    font-size: 0.88rem;
+  }
+
+  .cert-grid {
+    gap: 16px;
+  }
+
+  /* Services mobile */
+  .services-title {
+    margin-bottom: 32px;
+  }
+
   .service-card {
-    padding: 32px 24px;
+    padding: 28px 20px;
+  }
+
+  .service-name {
+    font-size: 1.1rem;
+  }
+
+  .service-desc {
+    font-size: 0.85rem;
+  }
+
+  /* Gallery mobile */
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
+  .gallery-item {
+    aspect-ratio: 16/9;
+  }
+
+  /* Testimonials mobile */
+  .results-title {
+    margin-bottom: 32px;
   }
 
   .testimonial {
-    padding: 28px 24px;
+    padding: 24px 20px;
+    gap: 20px;
   }
 
   .testimonial-quote p {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
+    line-height: 1.75;
   }
 
-  .author-image-placeholder {
-    width: 44px;
-    height: 44px;
-    font-size: 0.8rem;
+  .testimonial-author {
+    min-width: auto;
   }
 
-  /* Form */
+  .author-image {
+    width: 48px;
+    height: 48px;
+  }
+
+  .author-name {
+    font-size: 0.68rem;
+  }
+
+  .author-result {
+    font-size: 0.55rem;
+  }
+
+  /* CTA mobile */
+  .cta-section {
+    padding: 64px 0;
+  }
+
+  .cta-block {
+    gap: 24px;
+  }
+
+  .cta-right p {
+    font-size: 0.88rem;
+    margin-bottom: 24px;
+  }
+
+  .cta-right .cta-button {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Contact mobile */
+  .contact-title {
+    font-size: clamp(2.2rem, 8vw, 3rem);
+  }
+
+  .contact-sub {
+    font-size: 0.88rem;
+    margin-bottom: 32px;
+  }
+
+  .contact-details {
+    margin-bottom: 0;
+  }
+
+  /* Form mobile */
   .form-row {
     grid-template-columns: 1fr;
   }
 
-  /* Footer */
+  .form-group {
+    padding: 14px 16px;
+  }
+
+  .submit-btn {
+    padding: 18px 20px;
+  }
+
+  /* Footer mobile */
+  .footer {
+    padding: 48px 0 24px;
+  }
+
+  .footer-top {
+    padding-bottom: 32px;
+  }
+
   .footer-links {
     flex-wrap: wrap;
     gap: 16px;
@@ -1337,12 +1548,33 @@ a.contact-value:hover {
    SMALL MOBILE
    ============================================ */
 @media (max-width: 480px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .nav-inner {
+    padding: 0 16px;
+  }
+
+  .hero {
+    padding: 0 16px 32px;
+  }
+
   .hero-bg-text span {
     font-size: clamp(3rem, 18vw, 6rem);
   }
 
   .hero-headline {
-    font-size: 2rem;
+    font-size: 1.8rem;
+  }
+
+  .hero-tagline {
+    margin-bottom: 20px;
+  }
+
+  .hero-sub {
+    font-size: 0.75rem;
+    margin-bottom: 0;
   }
 
   .mobile-link {
@@ -1351,6 +1583,42 @@ a.contact-value:hover {
 
   .marquee-item {
     font-size: 0.6rem;
+  }
+
+  .about-title {
+    font-size: 1.6rem;
+  }
+
+  .about-lead {
+    font-size: 0.92rem;
+  }
+
+  .service-card {
+    padding: 24px 16px;
+  }
+
+  .service-name {
+    font-size: 1rem;
+  }
+
+  .testimonial {
+    padding: 20px 16px;
+  }
+
+  .testimonial-quote p {
+    font-size: 0.82rem;
+  }
+
+  .contact-title {
+    font-size: 2rem;
+  }
+
+  .cta-block h2 {
+    font-size: 1.6rem;
+  }
+
+  .footer-logo {
+    font-size: 1.2rem;
   }
 }
 
